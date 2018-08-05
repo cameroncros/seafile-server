@@ -1,9 +1,9 @@
-FROM resin/rpi-raspbian:jessie|g
+FROM resin/rpi-raspbian:jessie
 MAINTAINER snchan20@yahoo.com
 
 ENV SEAFILE_SERVER_VERSION 6.3.2
 
-ENV SEAFILE_SERVER_URL https://github.com/haiwen/seafile-rpi/releases/download/v6.3.2/seafile-server_6.3.2_stable_pi.tar.gz|g
+ENV SEAFILE_SERVER_URL https://github.com/haiwen/seafile-rpi/releases/download/v6.3.2/seafile-server_6.3.2_stable_pi.tar.gz
 
 ENV TOPDIR /var/seafile
 ENV BINDIR $TOPDIR/seafile-server-${SEAFILE_SERVER_VERSION}
