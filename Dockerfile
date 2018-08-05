@@ -1,9 +1,12 @@
-FROM resin/rpi-raspbian:jessie
-MAINTAINER snchan20@yahoo.com
+cp Dockerfile Dockerfile.armv7
+
+FROM resin/rpi-raspbian:jessie|g Dockerfile.armv7
 
 ENV SEAFILE_SERVER_VERSION 6.3.2
 
-ENV SEAFILE_SERVER_URL https://github.com/haiwen/seafile-rpi/releases/download/v6.3.2/seafile-server_6.3.2_stable_pi.tar.gz
+ENV SEAFILE_SERVER_URL https://github.com/haiwen/seafile-rpi/releases/download/v6.3.2/seafile-server_6.3.2_stable_pi.tar.gz|g Dockerfile.armv7
+
+docker build . -f Dockerfile.armv7 -t anemonium/seafile-server:raspberrypi3-latest
 
 ENV TOPDIR /var/seafile
 ENV BINDIR $TOPDIR/seafile-server-${SEAFILE_SERVER_VERSION}
