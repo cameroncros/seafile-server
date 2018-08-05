@@ -29,7 +29,7 @@ RUN mkdir -p $TOPDIR \
     && tar -xzf seafile-server_* \
     && mkdir installed \
     && mv seafile-server_* installed \
-    && ln -s $TOPDIR/seafile-server-6.0.9 $TOPDIR/seafile-server-latest \
+    && ln -s $TOPDIR/seafile-server-6.3.2 $TOPDIR/seafile-server-latest \
     && rm /etc/nginx/sites-enabled/default
     
 COPY seafile/ $BINDIR/
