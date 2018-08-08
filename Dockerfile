@@ -1,12 +1,8 @@
-cp Dockerfile Dockerfile.armv7
-
-FROM resin/rpi-raspbian:jessie|g Dockerfile.armv7
+FROM ubuntu:16.04
+MAINTAINER snchan20@yahoo.com
 
 ENV SEAFILE_SERVER_VERSION 6.3.2
-
-ENV SEAFILE_SERVER_URL https://github.com/haiwen/seafile-rpi/releases/download/v6.3.2/seafile-server_6.3.2_stable_pi.tar.gz|g Dockerfile.armv7
-
-docker build . -f Dockerfile.armv7 -t anemonium/seafile-server:raspberrypi3-latest
+ENV SEAFILE_SERVER_URL https://bintray.com/artifact/download/seafile-org/seafile/seafile-server_${SEAFILE_SERVER_VERSION}_x86-64.tar.gz
 
 ENV TOPDIR /var/seafile
 ENV BINDIR $TOPDIR/seafile-server-${SEAFILE_SERVER_VERSION}
@@ -33,7 +29,7 @@ RUN mkdir -p $TOPDIR \
     && tar -xzf seafile-server_* \
     && mkdir installed \
     && mv seafile-server_* installed \
-    && ln -s $TOPDIR/seafile-server-6.3.2 $TOPDIR/seafile-server-latest \
+    && ln -s $TOPDIR/seafile-server-${SEAFILE_SERVER_VERSION} $TOPDIR/seafile-server-latest \
     && rm /etc/nginx/sites-enabled/default
     
 COPY seafile/ $BINDIR/
