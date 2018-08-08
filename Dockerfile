@@ -25,9 +25,9 @@ RUN apt-get update \
     && apt-get clean \
     && rm -fr /tmp/* /var/tmp/* /var/lib/apt/lists/* 
 RUN mkdir -p $TOPDIR \
-    && cd $TOPDIR 
+    && cd $TOPDIR \
     && wget ${SEAFILE_SERVER_URL} \ 
-    && tar -xzf seafile-server_* 
+    && tar -xzf seafile-server_* \
     && mkdir installed \
     && mv seafile-server_* installed \
     && ln -s $TOPDIR/seafile-server-${SEAFILE_SERVER_VERSION} $TOPDIR/seafile-server-latest \
