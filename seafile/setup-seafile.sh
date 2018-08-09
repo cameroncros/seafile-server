@@ -307,11 +307,11 @@ function gen_seafdav_conf () {
     seafdav_conf=${default_conf_dir}/seafdav.conf
     if ! $(cat > ${seafdav_conf} <<EOF
 [WEBDAV]
-enabled = false
+enabled = true
 port = 8080
 fastcgi = false
 host = 0.0.0.0
-share_name = /
+share_name = /seafdav
 EOF
 ); then
     echo "failed to generate seafdav.conf";
