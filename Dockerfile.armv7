@@ -15,6 +15,7 @@ RUN apt-get update \
     && apt-get install -y \
         python2.7 \
         python-requests \
+        python-pip \
         libpython2.7 \
         python-setuptools \
         python-imaging \
