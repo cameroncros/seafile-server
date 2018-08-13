@@ -1,10 +1,8 @@
 FROM resin/rpi-raspbian:jessie
 
-MAINTAINER snchan20@yahoo.com
-
 RUN [ "cross-build-start" ]
 
-ENV SEAFILE_SERVER_VERSION 6.1.1
+ENV SEAFILE_SERVER_VERSION 6.3.2
 ENV SEAFILE_SERVER_URL https://github.com/haiwen/seafile-rpi/releases/download/v${SEAFILE_SERVER_VERSION}/seafile-server_${SEAFILE_SERVER_VERSION}_stable_pi.tar.gz
 
 ENV TOPDIR /var/seafile
@@ -14,15 +12,14 @@ ENV SHAREDDIR $TOPDIR/shared
 RUN apt-get update \
     && apt-get install -y \
         python2.7 \
-        python2.7-dev \
-        python-requests \
-        python-pip \
-        libpython2.7 \
         python-setuptools \
+        python-simplejson \
         python-imaging \
-        python-ldap \
-        python-urllib3 \
         python-memcache \
+        python-mysqldb \
+        python-requests \
+        python-urllib3 \
+        libpython2.7 \
         sqlite3 \
         wget \
         nano \
