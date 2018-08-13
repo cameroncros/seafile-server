@@ -20,6 +20,7 @@ RUN apt-get update \
         python-requests \
         python-urllib3 \
         libpython2.7 \
+        python-pip \
         sqlite3 \
         wget \
         nano \
