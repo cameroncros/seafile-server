@@ -1,4 +1,4 @@
-FROM sdhibit/rpi-baseimage
+FROM resin/rpi-raspbian:jessie
 
 RUN [ "cross-build-start" ]
 
