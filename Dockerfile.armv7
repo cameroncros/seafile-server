@@ -13,6 +13,7 @@ RUN apt-get update \
     && apt-get install -y \
         python2.7 \
         python-setuptools \
+        build-dep python-imaging \
         python-simplejson \
         python-imaging \
         python-memcache \
