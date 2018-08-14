@@ -28,7 +28,7 @@ RUN apt-get update \
         nginx \
     && apt-get remove python-pip \
     && easy_install pip \
-    && pip install --updgade urllib3 \
+    && pip install --upgrade urllib3 \
     && pip install --upgrade pillow \
     && apt-get autoremove \
     && apt-get clean \
