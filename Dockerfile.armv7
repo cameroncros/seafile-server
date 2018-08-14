@@ -9,8 +9,8 @@ ENV TOPDIR /var/seafile
 ENV BINDIR $TOPDIR/seafile-server-${SEAFILE_SERVER_VERSION}
 ENV SHAREDDIR $TOPDIR/shared
 
-RUN apt-get build-dep python-imaging
 RUN apt-get update \
+    && apt-get build-dep python-imaging \
     && apt-get install -y \
         python2.7 \
         python-setuptools \
