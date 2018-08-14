@@ -21,6 +21,7 @@ RUN apt-get update \
         python-urllib3 \
         libpython2.7 \
         python-pip \
+        libjpeg-dev \
         sqlite3 \
         wget \
         nano \
@@ -32,6 +33,7 @@ RUN apt-get update \
 RUN apt-get remove python-pip
 RUN easy_install pip
 RUN sudo pip install --upgrade urllib3
+RUN sudo pip install --upgrade Pillow
 
 RUN mkdir -p $TOPDIR \
     && cd $TOPDIR \
