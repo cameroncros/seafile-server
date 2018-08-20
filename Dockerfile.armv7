@@ -10,26 +10,19 @@ ENV BINDIR $TOPDIR/seafile-server-${SEAFILE_SERVER_VERSION}
 ENV SHAREDDIR $TOPDIR/shared
 
 RUN apt-get update \
+    && apat-get upgrade \
     && apt-get install -y \
         python2.7 \
-        python-setuptools \
-        python-simplejson \
-        python-imaging \
-        python-memcache \
-        python-mysqldb \
         python-requests \
-        python-urllib3 \
-        python-ldap \
         libpython2.7 \
-        python-pip \
-        libjpeg-dev \
+        python-setuptools \
+        python-imaging \
+        python-ldap \
+        python-urllib3 \
         sqlite3 \
         wget \
         nano \
         nginx \
-    && pip install \
-        --upgrade urllib3 \
-        pillow \ 
     && apt-get autoremove \
     && apt-get clean \
     && rm -fr /tmp/* /var/tmp/* /var/lib/apt/lists/* 
