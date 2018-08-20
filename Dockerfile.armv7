@@ -27,8 +27,6 @@ RUN apt-get update \
         wget \
         nano \
         nginx \
-    && apt-get remove python-pip \
-    && easy_install pip \
     && pip install \
         --upgrade urllib3 \
         pillow \ 
