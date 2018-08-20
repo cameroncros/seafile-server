@@ -10,7 +10,7 @@ ENV BINDIR $TOPDIR/seafile-server-${SEAFILE_SERVER_VERSION}
 ENV SHAREDDIR $TOPDIR/shared
 
 RUN apt-get update \
-    && apat-get upgrade \
+    && apt-get upgrade \
     && apt-get install -y \
         python2.7 \
         python-requests \
