@@ -12,19 +12,19 @@ ENV SHAREDDIR $TOPDIR/shared
 RUN apt-get update \
     && apt-get install python \
     && apt-get install \
+        apt-utils \
         python2.7 \
         libpython2.7 \
         python-setuptools \
         python-imaging \
         python-ldap \
-        python-urllib3 \
-        ffmpeg \
         python-pip \
         sqlite3 \
         python-requests \
     && pip install \
         pillow \
         moviepy \
+        urllib3 \
     && apt-get autoremove \
     && apt-get clean \
     && rm -fr /tmp/* /var/tmp/* /var/lib/apt/lists/*      
