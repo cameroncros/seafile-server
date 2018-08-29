@@ -13,6 +13,7 @@ RUN apt-get update \
     && apt-get install -y \
         python2.7 \
         libpython2.7 \
+        pyhton-requests \
         python-setuptools \
         python-imaging \
         python-ldap \
