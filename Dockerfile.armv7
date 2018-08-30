@@ -19,6 +19,7 @@ RUN apt-get update \
         python-ldap \
         python-urllib3 \
         sqlite3 \
+        build-dep python-imaging \
         wget \
         nano \
         nginx \
