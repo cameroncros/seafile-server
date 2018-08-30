@@ -22,7 +22,6 @@ RUN apt-get update \
         wget \
         nano \
         nginx \
-        remove python-pip \
     && easy_install pip \
     && pip install --upgrade urllib3 \
     && apt-get autoremove \
