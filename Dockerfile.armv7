@@ -27,20 +27,15 @@ RUN apt-get update \
         wget \
         nano \
         nginx \
+    && apt-get remove python-pip \
     && easy_install pip \
     && pip install --upgrade urllib3 \
+    && rm -rf /tmp/seahub_cache/
     && apt-get autoremove \
     && apt-get clean \
     && rm -fr /tmp/* /var/tmp/* /var/lib/apt/lists/* \
     && pip list --format=columns
-     
-    ## apt-get remove python-pip 
-    ## easy_install pip 
-    ## pip install --upgrade urllib3 
-    ## Stop Seafile
-    ## rm -rf /<tmp_dir>/seahub_cache/ 
-    ## Start Seafile
-    
+
       
 RUN mkdir -p $TOPDIR \
     && cd $TOPDIR \
