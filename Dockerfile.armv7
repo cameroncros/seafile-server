@@ -10,22 +10,7 @@ ENV BINDIR $TOPDIR/seafile-server-${SEAFILE_SERVER_VERSION}
 ENV SHAREDDIR $TOPDIR/shared
 
 RUN apt-get update \
-    && apt-get install -y \
-        python2.7 \
-        python-setuptools \
-        python-simplejson \
-        python-imaging \
-        python-memcache \
-        python-requests \
-        python-urllib3 \
-        libpython2.7 \
-        python-ldap \
-        python-urllib3 \
-        sqlite3 \
-        libjpeg-dev \
-        openssl \
-        
-RUN apt-get install build-essential \
+    && apt-get install build-essential \
     && apt-get install -y \
         libevent-dev \ 
         libcurl4-openssl-dev \ 
@@ -51,7 +36,6 @@ RUN apt-get install build-essential \
     && rm -fr /tmp/* /var/tmp/* /var/lib/apt/lists/* \
     && pip list --format=columns
 
-      
 RUN mkdir -p $TOPDIR \
     && cd $TOPDIR \
     && wget ${SEAFILE_SERVER_URL} \ 
