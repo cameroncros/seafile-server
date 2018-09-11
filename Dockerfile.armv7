@@ -15,18 +15,17 @@ RUN apt-get update \
         python2.7 \
         libpython2.7 \ 
         python-setuptools \
-		python-imaging \
+	python-imaging \
         python-ldap \
         python-urllib3 \
         python-requests \
-		sqlite3 \
+	sqlite3 \
         wget \
         nano \
         nginx \
     && apt-get autoremove \
     && apt-get clean \
     && rm -fr /tmp/* /var/tmp/* /var/lib/apt/lists/* \
-    && pip list --format=columns
 
 RUN mkdir -p $TOPDIR \
     && cd $TOPDIR \
