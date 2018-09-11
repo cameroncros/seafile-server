@@ -1,4 +1,4 @@
-FROM resin/rpi-raspbian:jessie
+FROM resin/rpi-raspbian:latest
 
 RUN [ "cross-build-start" ]
 
@@ -12,22 +12,14 @@ ENV SHAREDDIR $TOPDIR/shared
 RUN apt-get update \
     && apt-get install build-essential \
     && apt-get install -y \
-        libevent-dev \ 
-        libcurl4-openssl-dev \ 
-        libglib2.0-dev \
-        uuid-dev \
-        intltool \ 
-        libsqlite3-dev \ 
-        libmysqlclient-dev \ 
-        libarchive-dev \ 
-        libtool \
-        libjansson-dev \ 
-        valac \ 
-        libfuse-dev \ 
-        re2c \    
-        flex \ 
+        python2.7 \
+        libpython2.7 \ 
         python-setuptools \
-        cmake \
+		python-imaging \
+        python-ldap \
+        python-urllib3 \
+        python-requests \
+		sqlite3 \
         wget \
         nano \
         nginx \
