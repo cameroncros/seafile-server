@@ -9,7 +9,7 @@ ENV TOPDIR /var/seafile
 ENV BINDIR $TOPDIR/seafile-server-${SEAFILE_SERVER_VERSION}
 ENV SHAREDDIR $TOPDIR/shared
 
-RUN apt-get update -qq && apt-get -qq -y install memcached mariadb-server nginx wget nano
+RUN apt-get update -qq && apt-get -qq -y install memcached mariadb-server sqlite3 nginx wget nano
 
 RUN apt-get install -y python2.7-dev python-imaging python-ldap python-mysqldb
 RUN curl -sSL -o /tmp/get-pip.py https://bootstrap.pypa.io/get-pip.py && \
