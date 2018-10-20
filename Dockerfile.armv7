@@ -2,7 +2,7 @@ FROM resin/rpi-raspbian:latest
 
 RUN [ "cross-build-start" ]
 
-ENV SEAFILE_SERVER_VERSION 6.0.9
+ENV SEAFILE_SERVER_VERSION 6.3.3
 ENV SEAFILE_SERVER_URL https://github.com/haiwen/seafile-rpi/releases/download/v${SEAFILE_SERVER_VERSION}/seafile-server_${SEAFILE_SERVER_VERSION}_stable_pi.tar.gz
 
 ENV TOPDIR /var/seafile
