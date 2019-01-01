@@ -19,7 +19,7 @@ SEAHUB_PORT=8000
 function seafile_server() {
   echo "$1 server"
   $BINDIR/seafile.sh $1
-  $BINDIR/seahub.sh $1-fastcgi $SEAHUB_PORT
+  $BINDIR/seahub.sh $1
 }
 
 function update_link() {
