@@ -18,7 +18,7 @@ SEAHUB_PORT=8000
 
 function seafile_server() {
   echo "$1 server"
-
+  $BINDIR/seafile.sh $1
 }
 
 function update_link() {
