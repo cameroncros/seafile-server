@@ -18,6 +18,7 @@ SEAHUB_PORT=8000
 
 function seafile_server() {
   echo "$1 server"
+  $BINDIR/setup-seafile.sh $1
   $BINDIR/seafile.sh $1
   $BINDIR/seahub.sh $1
 }
