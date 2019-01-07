@@ -9,9 +9,10 @@ ENV TOPDIR /var/seafile
 ENV BINDIR $TOPDIR/seafile-server-${SEAFILE_SERVER_VERSION}
 ENV SHAREDDIR $TOPDIR/shared
 
-RUN apt-get install software-properties-common
-
-RUN add-apt-repository universe
+RUN curl -sSL -o /tmp/get-pip.py https://bootstrap.pypa.io/get-pip.py && \
+    python /tmp/get-pip.py && \
+    rm -rf /tmp/get-pip.py && \
+    pip install -U wheel
 
 RUN apt-get update \
     && apt-get install -y \
