@@ -11,6 +11,8 @@ ENV SHAREDDIR $TOPDIR/shared
 
 RUN apt-get update -qq && apt-get -qq -y install memcached mariadb-server sqlite3 nginx wget nano
 
+RUN apt-get install -y python2.7-dev python-imaging python-ldap python-mysqldb
+
 RUN curl -sSL -o /tmp/get-pip.py https://bootstrap.pypa.io/get-pip.py && \
     python /tmp/get-pip.py && \
     rm -rf /tmp/get-pip.py && \
@@ -22,8 +24,6 @@ RUN apt-get update \
         python2.7 \
         libpython2.7 \
         python-setuptools \
-        python-imaging \
-        python-ldap \
         python-urllib3 \
         python-pip \
     && pip install --upgrade pillow \
