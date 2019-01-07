@@ -9,6 +9,8 @@ ENV TOPDIR /var/seafile
 ENV BINDIR $TOPDIR/seafile-server-${SEAFILE_SERVER_VERSION}
 ENV SHAREDDIR $TOPDIR/shared
 
+RUN apt-get update -qq && apt-get -qq -y install memcached mariadb-server sqlite3 nginx wget nano
+
 RUN curl -sSL -o /tmp/get-pip.py https://bootstrap.pypa.io/get-pip.py && \
     python /tmp/get-pip.py && \
     rm -rf /tmp/get-pip.py && \
@@ -23,10 +25,6 @@ RUN apt-get update \
         python-imaging \
         python-ldap \
         python-urllib3 \
-        sqlite3 \
-        wget \
-        nano \
-        nginx \ 
         python-pip \
     && pip install --upgrade pillow \
     && pip install --upgrade requests==2.18.4 \
