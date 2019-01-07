@@ -11,7 +11,8 @@ ENV SHAREDDIR $TOPDIR/shared
 
 RUN apt-get update -qq && apt-get -qq -y install \
     memcached \
-    mariadb-server \ sqlite3 \
+    mariadb-server \ 
+    sqlite3 \
     nginx \
     wget \ 
     nano
