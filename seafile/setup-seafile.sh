@@ -3,12 +3,12 @@
 SCRIPT=$(readlink -f "$0")
 INSTALLPATH=$(dirname "${SCRIPT}")
 TOPDIR=$(dirname "${INSTALLPATH}")
-default_ccnet_conf_dir=${TOPDIR}/ccnet
-default_seafile_data_dir=${TOPDIR}/seafile-data
-default_seahub_db=${TOPDIR}/seahub.db
-default_conf_dir=${TOPDIR}/conf
-default_pids_dir=${TOPDIR}/pids
-default_logs_dir=${TOPDIR}/logs
+default_ccnet_conf_dir=${TOPDIR}/shared/ccnet
+default_seafile_data_dir=${TOPDIR}/shared/seafile-data
+default_seahub_db=${TOPDIR}/shared/seahub.db
+default_conf_dir=${TOPDIR}/shared/conf
+default_pids_dir=${TOPDIR}/shared/pids
+default_logs_dir=${TOPDIR}/shared/logs
 
 export SEAFILE_LD_LIBRARY_PATH=${INSTALLPATH}/seafile/lib/:${INSTALLPATH}/seafile/lib64:${LD_LIBRARY_PATH}
 
@@ -307,15 +307,20 @@ function gen_gunicorn_conf () {
     gunicorn_conf=${default_conf_dir}/gunicorn.conf
     if ! $(cat > ${gunicorn_conf} <<EOF
 import os
+
 daemon = True
 workers = 5
+
 # default localhost:8000
 bind = "127.0.0.1:8000"
+
 # Pid
 pids_dir = '$default_pids_dir'
 pidfile = os.path.join(pids_dir, 'seahub.pid')
+
 # for file upload, we need a longer timeout value (default is only 30s, too short)
 timeout = 1200
+
 limit_request_line = 8190
 EOF
 ); then
