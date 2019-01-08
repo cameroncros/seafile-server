@@ -3,12 +3,12 @@
 SCRIPT=$(readlink -f "$0")
 INSTALLPATH=$(dirname "${SCRIPT}")
 TOPDIR=$(dirname "${INSTALLPATH}")
-
-SHAREDDIR=${TOPDIR}/shared
-default_ccnet_conf_dir=${SHAREDDIR}/ccnet
-default_seafile_data_dir=${SHAREDDIR}/seafile-data
-default_seahub_db=${SHAREDDIR}/seahub.db
-default_conf_dir=${SHAREDDIR}/conf
+default_ccnet_conf_dir=${TOPDIR}/ccnet
+default_seafile_data_dir=${TOPDIR}/seafile-data
+default_seahub_db=${TOPDIR}/seahub.db
+default_conf_dir=${TOPDIR}/conf
+default_pids_dir=${TOPDIR}/pids
+default_logs_dir=${TOPDIR}/logs
 
 export SEAFILE_LD_LIBRARY_PATH=${INSTALLPATH}/seafile/lib/:${INSTALLPATH}/seafile/lib64:${LD_LIBRARY_PATH}
 
@@ -23,7 +23,7 @@ function welcome () {
     echo -e "\nMake sure you have read seafile server manual at \n\n\t${server_manual_http}\n"
     echo -e "Note: This script will guide your to setup seafile server using sqlite3,"
     echo "which may have problems if your disk is on a NFS/CIFS/USB."
-    echo "In these cases, we sugguest you setup seafile server using MySQL."
+    echo "In these cases, we suggest you setup seafile server using MySQL."
     echo
     echo "Press [ENTER] to continue"
     echo "-----------------------------------------------------------------"
@@ -302,16 +302,38 @@ function get_seafile_data_dir () {
     echo
 }
 
+function gen_gunicorn_conf () {
+    mkdir -p ${default_conf_dir}
+    gunicorn_conf=${default_conf_dir}/gunicorn.conf
+    if ! $(cat > ${gunicorn_conf} <<EOF
+import os
+daemon = True
+workers = 5
+# default localhost:8000
+bind = "127.0.0.1:8000"
+# Pid
+pids_dir = '$default_pids_dir'
+pidfile = os.path.join(pids_dir, 'seahub.pid')
+# for file upload, we need a longer timeout value (default is only 30s, too short)
+timeout = 1200
+limit_request_line = 8190
+EOF
+); then
+    echo "failed to generate gunicorn.conf";
+    err_and_quit
+fi
+}
+
 function gen_seafdav_conf () {
     mkdir -p ${default_conf_dir}
     seafdav_conf=${default_conf_dir}/seafdav.conf
     if ! $(cat > ${seafdav_conf} <<EOF
 [WEBDAV]
-enabled = true
+enabled = false
 port = 8080
 fastcgi = false
 host = 0.0.0.0
-share_name = /seafdav
+share_name = /
 EOF
 ); then
     echo "failed to generate seafdav.conf";
@@ -520,6 +542,12 @@ fi
 echo "${seafile_data_dir}" > "${default_ccnet_conf_dir}/seafile.ini"
 
 # -------------------------------------------
+# Generate gunicorn.conf
+# -------------------------------------------
+
+gen_gunicorn_conf;
+
+# -------------------------------------------
 # Generate seafevents.conf
 # -------------------------------------------
 
@@ -528,7 +556,7 @@ gen_seafdav_conf;
 # -------------------------------------------
 # generate seahub/settings.py
 # -------------------------------------------
-dest_settings_py=${SHAREDDIR}/conf/seahub_settings.py
+dest_settings_py=${TOPDIR}/conf/seahub_settings.py
 seahub_secret_keygen=${INSTALLPATH}/seahub/tools/secret_key_generator.py
 
 if [[ ! -f ${dest_settings_py} ]]; then
@@ -633,7 +661,7 @@ function get_seahub_admin_passwd () {
 echo "Creating seahub database now, it may take one minute, please wait... "
 echo
 
-seahub_db=${SHAREDDIR}/seahub.db
+seahub_db=${TOPDIR}/seahub.db
 seahub_sqls=${INSTALLPATH}/seahub/sql/sqlite3.sql
 
 if ! sqlite3 ${seahub_db} ".read ${seahub_sqls}" 2>/dev/null 1>&2; then
@@ -647,10 +675,10 @@ echo "Done."
 
 media_dir=${INSTALLPATH}/seahub/media
 orig_avatar_dir=${INSTALLPATH}/seahub/media/avatars
-dest_avatar_dir=${SHAREDDIR}/seahub-data/avatars
+dest_avatar_dir=${TOPDIR}/seahub-data/avatars
 
 if [[ ! -d ${dest_avatar_dir} ]]; then
-    mkdir -p "${SHAREDDIR}/seahub-data"
+    mkdir -p "${TOPDIR}/seahub-data"
     mv "${orig_avatar_dir}" "${dest_avatar_dir}"
     ln -s ../../../seahub-data/avatars ${media_dir}
 fi
