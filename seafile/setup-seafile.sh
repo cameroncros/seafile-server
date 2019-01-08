@@ -561,7 +561,7 @@ gen_seafdav_conf;
 # -------------------------------------------
 # generate seahub/settings.py
 # -------------------------------------------
-dest_settings_py=${TOPDIR}/conf/seahub_settings.py
+dest_settings_py=${TOPDIR}/shared/conf/seahub_settings.py
 seahub_secret_keygen=${INSTALLPATH}/seahub/tools/secret_key_generator.py
 
 if [[ ! -f ${dest_settings_py} ]]; then
@@ -666,7 +666,7 @@ function get_seahub_admin_passwd () {
 echo "Creating seahub database now, it may take one minute, please wait... "
 echo
 
-seahub_db=${TOPDIR}/seahub.db
+seahub_db=${TOPDIR}/shared/seahub.db
 seahub_sqls=${INSTALLPATH}/seahub/sql/sqlite3.sql
 
 if ! sqlite3 ${seahub_db} ".read ${seahub_sqls}" 2>/dev/null 1>&2; then
@@ -680,10 +680,10 @@ echo "Done."
 
 media_dir=${INSTALLPATH}/seahub/media
 orig_avatar_dir=${INSTALLPATH}/seahub/media/avatars
-dest_avatar_dir=${TOPDIR}/seahub-data/avatars
+dest_avatar_dir=${TOPDIR}/shared/seahub-data/avatars
 
 if [[ ! -d ${dest_avatar_dir} ]]; then
-    mkdir -p "${TOPDIR}/seahub-data"
+    mkdir -p "${TOPDIR}/shared/seahub-data"
     mv "${orig_avatar_dir}" "${dest_avatar_dir}"
     ln -s ../../../seahub-data/avatars ${media_dir}
 fi
@@ -692,7 +692,7 @@ fi
 # /data/haiwen/
 #            -- seafile-server-2.0.4
 #            -- seafile-server-latest # symlink to 2.0.4
-seafile_server_symlink=${TOPDIR}/seafile-server-latest
+seafile_server_symlink=${TOPDIR}/shared/seafile-server-latest
 echo
 echo -n "creating seafile-server-latest symbolic link ... "
 if ! ln -s $(basename ${INSTALLPATH}) ${seafile_server_symlink}; then
