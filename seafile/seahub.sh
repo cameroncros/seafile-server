@@ -15,17 +15,15 @@ echo ""
 SCRIPT=$(readlink -f "$0")
 INSTALLPATH=$(dirname "${SCRIPT}")
 TOPDIR=$(dirname "${INSTALLPATH}")
-SHAREDDIR=${TOPDIR}/shared
-default_ccnet_conf_dir=${SHAREDDIR}/ccnet
-central_config_dir=${SHAREDDIR}/conf
+default_ccnet_conf_dir=${TOPDIR}/ccnet
+central_config_dir=${TOPDIR}/conf
 
 manage_py=${INSTALLPATH}/seahub/manage.py
-gunicorn_conf=${INSTALLPATH}/runtime/seahub.conf
-pidfile=${INSTALLPATH}/runtime/seahub.pid
-errorlog=${INSTALLPATH}/runtime/error.log
-accesslog=${INSTALLPATH}/runtime/access.log
+gunicorn_conf=${TOPDIR}/conf/gunicorn.conf
+pidfile=${TOPDIR}/pids/seahub.pid
+errorlog=${TOPDIR}/logs/gunicorn_error.log
+accesslog=${TOPDIR}/logs/gunicorn_access.log
 gunicorn_exe=${INSTALLPATH}/seahub/thirdpart/gunicorn
-
 
 script_name=$0
 function usage () {
@@ -43,7 +41,7 @@ function usage () {
 
 # Check args
 if [[ $1 != "start" && $1 != "stop" && $1 != "restart" \
-    && $1 != "start-fastcgi" && $1 != "restart-fastcgi" && $1 != "clearsessions" ]]; then
+    && $1 != "start-fastcgi" && $1 != "restart-fastcgi" && $1 != "clearsessions" && $1 != "python-env" ]]; then
     usage;
     exit 1;
 fi
@@ -121,6 +119,8 @@ elif [[ $1 == "stop" && $# == 1 ]]; then
     dummy=dummy
 elif [[ $1 == "clearsessions" && $# == 1 ]]; then
     dummy=dummy
+elif [[ $1 == "python-env" ]]; then
+    dummy=dummy
 else
     usage;
     exit 1
@@ -136,7 +136,7 @@ function warning_if_seafile_not_running () {
 }
 
 function prepare_seahub_log_dir() {
-    logdir=${SHAREDDIR}/logs
+    logdir=${TOPDIR}/logs
     if ! [[ -d ${logsdir} ]]; then
         if ! mkdir -p "${logdir}"; then
             echo "ERROR: failed to create logs dir \"${logdir}\""
@@ -157,7 +157,7 @@ function start_seahub () {
     before_start;
     echo "Starting seahub at port ${port} ..."
     check_init_admin;
-    $PYTHON $gunicorn_exe seahub.wsgi:application -c "${gunicorn_conf}" -b "0.0.0.0:${port}" --preload
+    $PYTHON $gunicorn_exe seahub.wsgi:application -c "${gunicorn_conf}" --preload
 
     # Ensure seahub is started successfully
     sleep 5
@@ -180,7 +180,7 @@ function start_seahub_fastcgi () {
 
     echo "Starting seahub (fastcgi) at ${address}:${port} ..."
     check_init_admin;
-    $PYTHON "${manage_py}" runfcgi host=$address port=$port pidfile=$pidfile \
+    $PYTHON "${manage_py}" runfcgi maxchildren=8 host=$address port=$port pidfile=$pidfile \
         outlog=${accesslog} errlog=${errorlog}
 
     # Ensure seahub is started successfully
@@ -229,9 +229,12 @@ function clear_sessions () {
 
 function stop_seahub () {
     if [[ -f ${pidfile} ]]; then
-        pid=$(cat "${pidfile}")
         echo "Stopping seahub ..."
-        kill ${pid}
+        pkill -9 -f "thirdpart/gunicorn"
+        if pgrep -f "thirdpart/gunicorn" 2>/dev/null 1>&2 ; then
+            echo 'Failed to stop seahub.'
+            exit 1
+        fi
         rm -f ${pidfile}
         return 0
     else
@@ -243,6 +246,24 @@ function check_init_admin() {
     check_init_admin_script=${INSTALLPATH}/check_init_admin.py
     if ! $PYTHON $check_init_admin_script; then
         exit 1
+    fi
+}
+
+function run_python_env() {
+    local pyexec
+
+    prepare_env;
+
+    if which ipython 2>/dev/null; then
+        pyexec=ipython
+    else
+        pyexec=$PYTHON
+    fi
+
+    if [[ $# -eq 0 ]]; then
+        $pyexec "$@"
+    else
+        "$@"
     fi
 }
 
@@ -265,6 +286,10 @@ case $1 in
         stop_seahub
         sleep 2
         start_seahub_fastcgi
+        ;;
+    "python-env")
+        shift
+        run_python_env "$@"
         ;;
     "clearsessions" )
         clear_sessions
