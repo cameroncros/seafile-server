@@ -15,8 +15,8 @@ echo ""
 SCRIPT=$(readlink -f "$0")
 INSTALLPATH=$(dirname "${SCRIPT}")
 TOPDIR=$(dirname "${INSTALLPATH}")
-default_ccnet_conf_dir=${SHAREDDIR}/ccnet
-central_config_dir=${SHAREDDIR}/conf
+default_ccnet_conf_dir=${TOPDIR}/shared/ccnet
+central_config_dir=${TOPDIR}/shared/conf
 
 manage_py=${INSTALLPATH}/seahub/manage.py
 gunicorn_conf=${TOPDIR}/conf/gunicorn.conf
