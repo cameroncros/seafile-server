@@ -15,9 +15,8 @@ echo ""
 SCRIPT=$(readlink -f "$0")
 INSTALLPATH=$(dirname "${SCRIPT}")
 TOPDIR=$(dirname "${INSTALLPATH}")
-SHAREDDIR=${TOPDIR}/shared
-default_ccnet_conf_dir=${SHAREDDIR}/ccnet
-central_config_dir=${SHAREDDIR}/conf
+default_ccnet_conf_dir=${TOPDIR}/ccnet
+central_config_dir=${TOPDIR}/conf
 seaf_controller="${INSTALLPATH}/seafile/bin/seafile-controller"
 
 
@@ -128,7 +127,7 @@ function start_seafile_server () {
 
     echo "Starting seafile server, please wait ..."
 
-    mkdir -p ${SHAREDDIR}/logs
+    mkdir -p $TOPDIR/logs
     LD_LIBRARY_PATH=$SEAFILE_LD_LIBRARY_PATH ${seaf_controller} \
                    -c "${default_ccnet_conf_dir}" \
                    -d "${seafile_data_dir}" \
