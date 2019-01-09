@@ -19,10 +19,10 @@ default_ccnet_conf_dir=${TOPDIR}/shared/ccnet
 central_config_dir=${TOPDIR}/shared/conf
 
 manage_py=${INSTALLPATH}/seahub/manage.py
-gunicorn_conf=${TOPDIR}/conf/gunicorn.conf
-pidfile=${TOPDIR}/pids/seahub.pid
-errorlog=${TOPDIR}/logs/gunicorn_error.log
-accesslog=${TOPDIR}/logs/gunicorn_access.log
+gunicorn_conf=${TOPDIR}/shared/conf/gunicorn.conf
+pidfile=${TOPDIR}/shared/pids/seahub.pid
+errorlog=${TOPDIR}/shared/logs/gunicorn_error.log
+accesslog=${TOPDIR}/shared/logs/gunicorn_access.log
 gunicorn_exe=${INSTALLPATH}/seahub/thirdpart/gunicorn
 
 script_name=$0
