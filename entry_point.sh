@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e 
-
+echo "Starting up"
 SERVER_NAME=seafile
 if [ -z $PROTOCOL ]; then
     PROTOCOL=http
