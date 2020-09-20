@@ -11,7 +11,7 @@ ENV SHAREDDIR $TOPDIR/shared
 ENV ADMIN_EMAIL admin@seafile
 ENV ADMIN_PASSWORD password
 
-RUN apt-get update && apt-get install -y nginx python3.7-dev bash wget sqlite python3-pil python3-setuptools libevent-2.1-6 libsearpc1 procps vim
+RUN apt-get update && apt-get install -y nginx python3.7-dev bash wget sqlite python3-pil python3-setuptools python3-ldap libevent-2.1-6 libsearpc1 procps vim
 
 RUN mkdir -p $TOPDIR \
     && cd $TOPDIR \
@@ -32,4 +32,4 @@ EXPOSE 80 443
 VOLUME ["/var/seafile/shared"]
 
 WORKDIR $BINDIR
-CMD "/var/seafile/entry_point.sh"
+ENTRYPOINT ["/var/seafile/entry_point.sh"]

@@ -32,12 +32,19 @@ function update_link() {
     WEB_URL=$1
     SEAHUB_SETTING_PY=$TOPDIR/conf/seahub_settings.py
     CCNET_CONF=$TOPDIR/conf/ccnet.conf
-    touch $SEAHUB_SETTING_PY  
+    
     if [ -z "$(grep 'FILE_SERVER_ROOT' $SEAHUB_SETTING_PY)" ]; then
         echo "FILE_SERVER_ROOT = '$WEB_URL/seafhttp'" >> $SEAHUB_SETTING_PY
     else
         sed -i "s|FILE_SERVER_ROOT.*|FILE_SERVER_ROOT = '$WEB_URL/seafhttp'|g" $SEAHUB_SETTING_PY
     fi
+    
+    if [ -z "$(grep 'CSRF_TRUSTED_ORIGINS' $SEAHUB_SETTING_PY)" ]; then    
+        echo "CSRF_TRUSTED_ORIGINS = ['${DOMAIN}:${PORT}']" >> $SEAHUB_SETTING_PY
+    else
+        sed -i "s|CSRF_TRUSTED_ORIGINS.*|CSRF_TRUSTED_ORIGINS = ['${DOMAIN}:${PORT}']|g" $SEAHUB_SETTING_PY
+    fi 
+    
     sed -i "s:SERVICE_URL.*:SERVICE_URL = $URL:g" $CCNET_CONF
 }
 
