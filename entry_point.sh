@@ -16,6 +16,11 @@ fi
 SEAFILE_PORT=8082
 SEAHUB_PORT=8000
 
+function init_admin_file() {
+  mkdir $TOPDIR/conf
+  echo "{\"email\": \"$ADMIN_EMAIL\", \"password\": \"$ADMIN_PASSWORD\"}" >> $TOPDIR/conf/admin.txt
+}
+
 function seafile_server() {
   echo "$1 server"
   $BINDIR/seafile.sh $1
@@ -25,9 +30,9 @@ function seafile_server() {
 
 function update_link() {
     WEB_URL=$1
-    SEAHUB_SETTING_PY=$SHAREDDIR/conf/seahub_settings.py
-    CCNET_CONF=$SHAREDDIR/conf/ccnet.conf
-    
+    SEAHUB_SETTING_PY=$TOPDIR/conf/seahub_settings.py
+    CCNET_CONF=$TOPDIR/conf/ccnet.conf
+    touch $SEAHUB_SETTING_PY  
     if [ -z "$(grep 'FILE_SERVER_ROOT' $SEAHUB_SETTING_PY)" ]; then
         echo "FILE_SERVER_ROOT = '$WEB_URL/seafhttp'" >> $SEAHUB_SETTING_PY
     else
@@ -37,10 +42,12 @@ function update_link() {
 }
 
 # main
+init_admin_file
+
 ## Seafile
-if [ ! -d $TOPDIR/shared/ccnet ]; then
+if [ ! -d $TOPDIR/ccnet ]; then
   echo "Setting up server"
-  $BINDIR/setup-seafile.sh auto -n $SERVER_NAME -i $SERVER_IP -p $SEAFILE_PORT -d $TOPDIR/shared
+  $BINDIR/setup-seafile.sh auto -n $SERVER_NAME -i $SERVER_IP -p $SEAFILE_PORT -d $TOPDIR
 fi
 update_link $DOMAIN
 seafile_server start
