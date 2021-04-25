@@ -1,0 +1,15 @@
+version: '2'
+services:
+  seafile:
+    image: cameroncros/seafile:8.0.3
+    restart: always
+    ports:
+      - 9009:443
+    volumes:
+      - /srv/seafile/docker-beta:/var/seafile/shared
+      - /etc/letsencrypt/live/cameron.servebeer.com/fullchain.pem:/etc/ssl/fullchain1.pem
+      - /etc/letsencrypt/live/cameron.servebeer.com/privkey.pem:/etc/ssl/privkey1.pem
+    environment:
+      - DOMAIN=cameron.servebeer.com
+      - PORT=9009
+      - PROTOCOL=https

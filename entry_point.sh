@@ -16,22 +16,16 @@ fi
 SEAFILE_PORT=8082
 SEAHUB_PORT=8000
 
-function init_admin_file() {
-  mkdir $TOPDIR/conf
-  echo "{\"email\": \"$ADMIN_EMAIL\", \"password\": \"$ADMIN_PASSWORD\"}" >> $TOPDIR/conf/admin.txt
-}
-
 function seafile_server() {
   echo "$1 server"
-  $BINDIR/seafile.sh $1
-  $BINDIR/seahub.sh $1
-
+  $TOPDIR/shared/seafile.sh $1
+  $TOPDIR/shared/seahub.sh $1
 }
 
 function update_link() {
     WEB_URL=$1
-    SEAHUB_SETTING_PY=$TOPDIR/conf/seahub_settings.py
-    CCNET_CONF=$TOPDIR/conf/ccnet.conf
+    SEAHUB_SETTING_PY=$TOPDIR/shared/conf/seahub_settings.py
+    CCNET_CONF=$TOPDIR/shared/conf/ccnet.conf
     
     if [ -z "$(grep 'FILE_SERVER_ROOT' $SEAHUB_SETTING_PY)" ]; then
         echo "FILE_SERVER_ROOT = '$WEB_URL/seafhttp'" >> $SEAHUB_SETTING_PY
@@ -43,20 +37,21 @@ function update_link() {
         echo "CSRF_TRUSTED_ORIGINS = ['${DOMAIN}:${PORT}']" >> $SEAHUB_SETTING_PY
     else
         sed -i "s|CSRF_TRUSTED_ORIGINS.*|CSRF_TRUSTED_ORIGINS = ['${DOMAIN}:${PORT}']|g" $SEAHUB_SETTING_PY
-    fi 
-    
+    fi
+
     sed -i "s:SERVICE_URL.*:SERVICE_URL = $URL:g" $CCNET_CONF
 }
 
-# main
-init_admin_file
-
 ## Seafile
-if [ ! -d $TOPDIR/ccnet ]; then
-  echo "Setting up server"
-  $BINDIR/setup-seafile.sh auto -n $SERVER_NAME -i $SERVER_IP -p $SEAFILE_PORT -d $TOPDIR
+if [[ -L $TOPDIR/shared/seahub/media/avatars ]]; then
+    rm -rf $TOPDIR/seafile-server-latest/seahub/media/avatars
 fi
-update_link $DOMAIN
+cp $TOPDIR/seafile-server-latest/* $TOPDIR/shared/ -rf
+set +e
+$TOPDIR/shared/setup-seafile.sh auto -n $SERVER_NAME -i $SERVER_IP -p $SEAFILE_PORT -d $TOPDIR/shared/
+set -e
+#update_link $DOMAIN
+INSTALLPATH=$(dirname "${SCRIPT}")
 seafile_server start
 
 ## Nginx
@@ -65,6 +60,7 @@ if [ "$PROTOCOL" == "http" ]; then
     ln -s /etc/nginx/sites-available/seafile.conf /etc/nginx/sites-enabled/seafile.conf
 fi
 if [ "$PROTOCOL" == "https" ]; then
+    sed -i "s/__PORT__/$PORT/g" /etc/nginx/sites-available/seafile-ssl.conf
     ln -s /etc/nginx/sites-available/seafile-ssl.conf /etc/nginx/sites-enabled/seafile-ssl.conf
 fi
 /usr/sbin/nginx
