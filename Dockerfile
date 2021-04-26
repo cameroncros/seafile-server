@@ -28,5 +28,5 @@ COPY check_init_admin.py ${TOPDIR}/seafile-server-latest/
 EXPOSE 80 443
 VOLUME ["/var/seafile/shared"]
 
-WORKDIR $TOPDIR
+WORKDIR $TOPDIR/shared
 ENTRYPOINT ["/var/seafile/entry_point.sh"]

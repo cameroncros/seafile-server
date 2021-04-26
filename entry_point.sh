@@ -18,8 +18,8 @@ SEAHUB_PORT=8000
 
 function seafile_server() {
   echo "$1 server"
-  $TOPDIR/shared/seafile.sh $1
-  $TOPDIR/shared/seahub.sh $1
+  $TOPDIR/shared/seafile-server-latest/seafile.sh $1
+  $TOPDIR/shared/seafile-server-latest/seahub.sh $1
 }
 
 function update_link() {
@@ -38,20 +38,19 @@ function update_link() {
     else
         sed -i "s|CSRF_TRUSTED_ORIGINS.*|CSRF_TRUSTED_ORIGINS = ['${DOMAIN}:${PORT}']|g" $SEAHUB_SETTING_PY
     fi
-
-    sed -i "s:SERVICE_URL.*:SERVICE_URL = $URL:g" $CCNET_CONF
+    sed -i "s|SERVICE_URL.*|SERVICE_URL = $WEB_URL|g" $CCNET_CONF
 }
 
 ## Seafile
-if [[ -L $TOPDIR/shared/seahub/media/avatars ]]; then
+if [[ -L $TOPDIR/shared/seafile-server-latest/seahub/media/avatars ]]; then
     rm -rf $TOPDIR/seafile-server-latest/seahub/media/avatars
 fi
-cp $TOPDIR/seafile-server-latest/* $TOPDIR/shared/ -rf
+cp $TOPDIR/seafile-server-latest $TOPDIR/shared/ -rf
 set +e
-$TOPDIR/shared/setup-seafile.sh auto -n $SERVER_NAME -i $SERVER_IP -p $SEAFILE_PORT -d $TOPDIR/shared/
+$TOPDIR/shared/seafile-server-latest/setup-seafile.sh auto -n $SERVER_NAME -i $SERVER_IP -p $SEAFILE_PORT -d $TOPDIR/shared/
 set -e
-#update_link $DOMAIN
-INSTALLPATH=$(dirname "${SCRIPT}")
+update_link $PROTOCOL://$DOMAIN:$PORT
+INSTALLPATH=$TOPDIR/shared/seafile-server-latest/
 seafile_server start
 
 ## Nginx
@@ -60,7 +59,6 @@ if [ "$PROTOCOL" == "http" ]; then
     ln -s /etc/nginx/sites-available/seafile.conf /etc/nginx/sites-enabled/seafile.conf
 fi
 if [ "$PROTOCOL" == "https" ]; then
-    sed -i "s/__PORT__/$PORT/g" /etc/nginx/sites-available/seafile-ssl.conf
     ln -s /etc/nginx/sites-available/seafile-ssl.conf /etc/nginx/sites-enabled/seafile-ssl.conf
 fi
 /usr/sbin/nginx
